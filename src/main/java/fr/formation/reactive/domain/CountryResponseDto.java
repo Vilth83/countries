@@ -1,7 +1,5 @@
 package fr.formation.reactive.domain;
 
-import java.net.URI;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,10 +13,10 @@ public class CountryResponseDto {
     private String name;
 
     @NotBlank
-    private String Region;
+    private String region;
 
     @NotNull
-    private URI flag;
+    private String flag;
 
     public String getAlpha2Code() {
 	return alpha2Code;
@@ -37,18 +35,18 @@ public class CountryResponseDto {
     }
 
     public String getRegion() {
-	return Region;
+	return region;
     }
 
     public void setRegion(String region) {
-	Region = region;
+	region = region;
     }
 
-    public URI getFlag() {
+    public String getFlag() {
 	return flag;
     }
 
-    public void setFlag(URI flag) {
+    public void setFlag(String flag) {
 	this.flag = flag;
     }
 }

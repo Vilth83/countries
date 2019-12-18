@@ -4,13 +4,13 @@ import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import fr.formation.reactive.domain.Country;
 import fr.formation.reactive.domain.CountryResponseDto;
-import fr.formation.reactive.domain.exceptions.ResourceNotFoundException;
+import fr.formation.reactive.domain.CountryResponseValidator;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -22,36 +22,33 @@ public class CountryServiceImpl implements CountryService {
     @Autowired
     private WebClient webClient;
 
+    @Autowired
+    private CountryResponseValidator responseValidator;
+
     @Cacheable(value = "country", key = "#isoCode")
     @Override
     public Mono<Country> getByIsoCode(String isoCode) {
 	return repo.findByIsoCode(isoCode).switchIfEmpty(getAndSave(isoCode));
     }
 
-    private void save(Country country) {
+    private Country save(Country country) {
 	repo.save(country).subscribe();
+	return country;
     }
 
     private Mono<Country> getAndSave(String isoCode) {
 	return getFromApiByIsoCode(isoCode).timeout(Duration.ofMillis(2000))
-		.map(this::mapToCountry).map(resp -> {
-		    if (resp.getIsoCode() == null) {
-			throw new ResourceNotFoundException(
-				"ISO CODE " + isoCode + " does not exist");
-		    }
-		    save(resp);
-		    return resp;
-		});
+		.map(this::mapToCountry).map(this::save);
     }
 
     private Mono<CountryResponseDto> getFromApiByIsoCode(String isoCode) {
-	return webClient.get().uri("/" + isoCode)
-		.accept(MediaType.APPLICATION_JSON).exchange()
-		.flatMap(response -> response
-			.bodyToMono(CountryResponseDto.class));
+	return webClient.get().uri("/" + isoCode).exchange().flatMap(
+		response -> response.bodyToMono(CountryResponseDto.class));
     }
 
     private Country mapToCountry(CountryResponseDto dto) {
+	responseValidator.validate(dto,
+		new DirectFieldBindingResult(dto, dto.toString()));
 	Country country = new Country();
 	country.setName(dto.getName());
 	country.setRegion(dto.getRegion());

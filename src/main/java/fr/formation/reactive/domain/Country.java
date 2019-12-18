@@ -1,7 +1,5 @@
 package fr.formation.reactive.domain;
 
-import java.net.URI;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -19,16 +17,16 @@ public class Country {
     private String name;
 
     @Field
-    private String Region;
+    private String region;
 
     @Field
-    private URI flag;
+    private String flag;
 
-    public Country(String isoCode, String name, String region, URI flag) {
+    public Country(String isoCode, String name, String region, String flag) {
 	super();
 	this.isoCode = isoCode;
 	this.name = name;
-	Region = region;
+	region = region;
 	this.flag = flag;
     }
 
@@ -60,24 +58,24 @@ public class Country {
     }
 
     public String getRegion() {
-	return Region;
+	return region;
     }
 
     public void setRegion(String region) {
-	Region = region;
+	region = region;
     }
 
-    public URI getFlag() {
+    public String getFlag() {
 	return flag;
     }
 
-    public void setFlag(URI flag) {
+    public void setFlag(String flag) {
 	this.flag = flag;
     }
 
     @Override
     public String toString() {
 	return "Country [id=" + id + ", isoCode=" + isoCode + ", name=" + name
-		+ ", Region=" + Region + ", flag=" + flag + "]";
+		+ ", Region=" + region + ", flag=" + flag + "]";
     }
 }
