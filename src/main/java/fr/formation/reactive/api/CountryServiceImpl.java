@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import fr.formation.reactive.domain.Country;
 import fr.formation.reactive.domain.CountryResponseDto;
+import fr.formation.reactive.domain.exceptions.ResourceNotFoundException;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -32,9 +33,11 @@ public class CountryServiceImpl implements CountryService {
     private Mono<Country> getAndSave(String isoCode) {
 	return getFromApiByIsoCode(isoCode).map(this::mapToCountry)
 		.map(resp -> {
-		    if (resp.getIsoCode() != null) {
-			save(resp);
+		    if (resp.getIsoCode() == null) {
+			throw new ResourceNotFoundException(
+				"ISO CODE " + isoCode + " does not exist");
 		    }
+		    save(resp);
 		    return resp;
 		});
     }
