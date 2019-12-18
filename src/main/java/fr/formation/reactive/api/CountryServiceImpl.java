@@ -1,5 +1,7 @@
 package fr.formation.reactive.api;
 
+import java.time.Duration;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
@@ -31,8 +33,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     private Mono<Country> getAndSave(String isoCode) {
-	return getFromApiByIsoCode(isoCode).map(this::mapToCountry)
-		.map(resp -> {
+	return getFromApiByIsoCode(isoCode).timeout(Duration.ofMillis(2000))
+		.map(this::mapToCountry).map(resp -> {
 		    if (resp.getIsoCode() == null) {
 			throw new ResourceNotFoundException(
 				"ISO CODE " + isoCode + " does not exist");
