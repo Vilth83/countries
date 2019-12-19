@@ -1,4 +1,4 @@
-package fr.formation.reactive.domain;
+package fr.formation.reactive.domain.dtos;
 
 import javax.validation.constraints.Size;
 

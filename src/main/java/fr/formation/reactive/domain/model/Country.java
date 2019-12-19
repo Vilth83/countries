@@ -1,4 +1,6 @@
-package fr.formation.reactive.domain;
+package fr.formation.reactive.domain.model;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,6 +13,7 @@ public class Country {
     private String id;
 
     @Field
+    @NotNull
     private String isoCode;
 
     @Field
@@ -62,7 +65,7 @@ public class Country {
     }
 
     public void setRegion(String region) {
-	region = region;
+	this.region = region;
     }
 
     public String getFlag() {

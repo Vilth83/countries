@@ -1,23 +1,19 @@
-package fr.formation.reactive.api;
+package fr.formation.reactive.api.services;
 
 import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import fr.formation.reactive.domain.Country;
-import fr.formation.reactive.domain.CountryResponseDto;
-import fr.formation.reactive.domain.CountryResponseValidator;
+import fr.formation.reactive.domain.dtos.CountryResponseDto;
+import fr.formation.reactive.domain.model.Country;
+import fr.formation.reactive.domain.validators.CountryResponseValidator;
 import reactor.core.publisher.Mono;
 
 @Service
-public class CountryServiceImpl implements CountryService {
-
-    @Autowired
-    private CountryRepo repo;
+public class ExternalApiCountryServiceImpl implements CountryService {
 
     @Autowired
     private WebClient webClient;
@@ -25,20 +21,10 @@ public class CountryServiceImpl implements CountryService {
     @Autowired
     private CountryResponseValidator responseValidator;
 
-    @Cacheable(value = "country", key = "#isoCode")
     @Override
     public Mono<Country> getByIsoCode(String isoCode) {
-	return repo.findByIsoCode(isoCode).switchIfEmpty(getAndSave(isoCode));
-    }
-
-    private Country save(Country country) {
-	repo.save(country).subscribe();
-	return country;
-    }
-
-    private Mono<Country> getAndSave(String isoCode) {
 	return getFromApiByIsoCode(isoCode).timeout(Duration.ofMillis(2000))
-		.map(this::mapToCountry).map(this::save);
+		.map(this::mapToCountry);
     }
 
     private Mono<CountryResponseDto> getFromApiByIsoCode(String isoCode) {
@@ -48,7 +34,7 @@ public class CountryServiceImpl implements CountryService {
 
     private Country mapToCountry(CountryResponseDto dto) {
 	responseValidator.validate(dto,
-		new DirectFieldBindingResult(dto, dto.toString()));
+		new DirectFieldBindingResult(dto, dto.getClass().getName()));
 	Country country = new Country();
 	country.setName(dto.getName());
 	country.setRegion(dto.getRegion());

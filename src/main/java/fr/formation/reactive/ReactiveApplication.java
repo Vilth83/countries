@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import fr.formation.reactive.domain.CountryResponseValidator;
+import fr.formation.reactive.domain.validators.CountryResponseValidator;
 
 @SpringBootApplication
 @EnableCaching

@@ -1,4 +1,4 @@
-package fr.formation.reactive.api;
+package fr.formation.reactive.commons;
 
 import java.net.UnknownHostException;
 

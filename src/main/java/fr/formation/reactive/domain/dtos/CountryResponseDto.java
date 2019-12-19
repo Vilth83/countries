@@ -1,12 +1,15 @@
-package fr.formation.reactive.domain;
+package fr.formation.reactive.domain.dtos;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class CountryResponseDto {
 
     @Size(min = 2, max = 2)
+    @NotEmpty
+    @NotNull
     private String alpha2Code;
 
     @NotBlank
@@ -15,8 +18,18 @@ public class CountryResponseDto {
     @NotBlank
     private String region;
 
-    @NotNull
+    @NotBlank
     private String flag;
+
+    private int status;
+
+    public int getStatus() {
+	return status;
+    }
+
+    public void setStatus(int status) {
+	this.status = status;
+    }
 
     public String getAlpha2Code() {
 	return alpha2Code;
@@ -39,7 +52,7 @@ public class CountryResponseDto {
     }
 
     public void setRegion(String region) {
-	region = region;
+	this.region = region;
     }
 
     public String getFlag() {
@@ -48,5 +61,11 @@ public class CountryResponseDto {
 
     public void setFlag(String flag) {
 	this.flag = flag;
+    }
+
+    @Override
+    public String toString() {
+	return "CountryResponseDto [alpha2Code=" + alpha2Code + ", name=" + name
+		+ ", region=" + region + ", flag=" + flag + "]";
     }
 }

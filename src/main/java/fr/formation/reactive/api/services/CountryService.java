@@ -1,6 +1,6 @@
-package fr.formation.reactive.api;
+package fr.formation.reactive.api.services;
 
-import fr.formation.reactive.domain.Country;
+import fr.formation.reactive.domain.model.Country;
 import reactor.core.publisher.Mono;
 
 public interface CountryService {

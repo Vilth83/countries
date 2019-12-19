@@ -1,7 +1,9 @@
-package fr.formation.reactive.domain;
+package fr.formation.reactive.domain.validators;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import fr.formation.reactive.domain.dtos.CountryResponseDto;
 
 public class CountryResponseValidator implements Validator {
 
